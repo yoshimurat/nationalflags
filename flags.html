@@ -1,0 +1,139 @@
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+</head>
+<body>
+ <form id="hoge">  国旗神経衰弱（こっき　しんけいすいじゃく）　　パターン 
+ 
+  <input type="radio" id="r1" name="ptn" value="0" checked>1　
+  <input type="radio" name="ptn" value="1">2　
+  <input type="radio" name="ptn" value="2">3　
+  <input type="radio" name="ptn" value="3">4　　<input type="button" id="b1" value="リセット" onClick="init();"><br>
+  <canvas id="c1" width="1265" height="549"></canvas></form>
+</body>
+<script type="text/javascript">
+  
+  var ctx = document.getElementById("c1").getContext("2d")
+  
+  var h = 549;
+  var w = 1265;
+  
+  var card_w = 150;
+  var card_h = 100;
+  var num_row = 4;
+  var num_col = 7;
+  var sp = 30;
+  var img_f = [];
+  var img_b = [];
+  var flag = [];
+  var mx = 0;
+  var my = 0;
+  var ptn = 0;
+  var flag_select = 0
+  
+  var img_name = [
+	"01","06","13","03","10","08","07",
+	"05","08","04","07","02","12","05",
+	"03","14","12","01","11","14","09",
+	"06","02","11","09","13","04","10",
+
+	"06","10","12","07","13","03","08",
+	"04","02","14","11","01","05","09",
+	"13","09","01","08","04","11","07",
+	"03","10","02","06","12","14","05",
+
+	"08","01","02","03","04","05","09",
+	"10","12","04","01","05","13","06",
+	"11","11","03","02","06","14","07",
+	"07","12","13","14","09","08","10",
+
+	"14","09","12","11","10","08","13",
+	"05","01","13","07","14","03","04",
+	"03","07","11","06","12","08","02",
+	"06","02","10","01","09","04","05"
+	];
+  
+  
+  
+  var init = function() {
+  	
+  	ptn = document.getElementById("hoge").ptn.value;
+  	
+  	for (var i = 0; i < num_row * num_col * 4; i++) {
+  		flag[i] = 0;
+  		img_f[i] = (i+1) - num_row * num_col * ptn;
+  		img_b[i] = new Image();
+		img_b[i].src = "./" + img_name[i]+".jpg";
+  	}
+  	
+  	draw();
+  }
+  
+  var draw = function() {
+  
+  	ctx.beginPath();
+	ctx.fillStyle = 'white';
+	ctx.fillRect(0, 0, w, h);
+    ctx.textAlign = "center";
+  	ctx.font = "28px 'Meiryo UI'";
+	
+	for (var i = 0; i < num_row; i++) {
+		for (var j = 0; j < num_col; j++) {
+			var tmpx = sp*(j+1) + card_w * j;
+			var tmpy = sp*(i+1) + card_h * i;			
+			ctx.strokeStyle = 'black';
+			ctx.strokeRect(tmpx-1, tmpy-1, card_w+2, card_h+2);
+			
+			if (flag[i*num_col+j+(num_col*num_row)*ptn]) {
+				ctx.drawImage(img_b[i*num_col+j+(num_col*num_row)*ptn], tmpx, tmpy, card_w, card_h);
+			} else {
+				ctx.fillStyle = 'black';
+				ctx.fillText(img_f[i*num_col+j+(num_col*num_row)*ptn], tmpx + card_w/2, tmpy + card_h/2+10);
+			}
+		}
+	}
+	
+	// 座標とマウスの場所を表示
+  	ctx.textAlign = "left";
+  	ctx.font = "12px 'Meiryo UI'";
+  	ctx.fillText("x: "+mx+", y: "+my,10,10);
+  	
+  	var quot_x = (mx-5) % (sp+card_w) > sp ? Math.floor((mx-5)/(sp+card_w)) : -1;
+  	var quot_y = (my-30) % (sp+card_h) > sp ? Math.floor((my-30)/(sp+card_h)) : -1;
+  	ctx.fillText(quot_x+","+quot_y,110,10);
+  	
+  	if (quot_x < 0 || quot_y < 0) {
+  		return;
+  	}
+  	
+  	ctx.strokeStyle = 'red';
+  	ctx.strokeRect(quot_x*(sp+card_w)+sp-1, quot_y*(sp+card_h)+sp-1, card_w+2, card_h+2);
+  	ctx.closePath();
+	
+  }
+  
+  
+  var onKeyup = function(e) {
+	var quot_x = (mx-5) % (sp+card_w) > sp ? Math.floor((mx-5)/(sp+card_w)) : -1;
+  	var quot_y = (my-30) % (sp+card_h) > sp ? Math.floor((my-30)/(sp+card_h)) : -1;
+  	if (quot_x < 0 || quot_y < 0) {
+  		return;
+  	}
+  	var idx = quot_y*num_col+quot_x+(num_col*num_row)*ptn;
+  	flag[idx] = ~flag[idx];
+  	draw();
+  };
+  
+  var onMouseMove = function(e) {
+  	mx = event.pageX;
+  	my = event.pageY;
+	draw();
+  };
+
+  
+  document.getElementById("c1").addEventListener("mouseup", onKeyup, false);
+  document.getElementById("c1").addEventListener('mousemove', onMouseMove, false);
+  init();
+
+</script>
+</html>
