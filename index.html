@@ -32,27 +32,43 @@
   var flag_select = 0
   
   var img_name = [
-	"01","06","13","03","10","08","07",
-	"05","08","04","07","02","12","05",
-	"03","14","12","01","11","14","09",
-	"06","02","11","09","13","04","10",
+	"a","f","m","c","j","h","g",
+	"e","h","d","g","b","l","e",
+	"c","n","l","a","k","n","i",
+	"f","b","k","i","m","d","j",
 
-	"06","10","12","07","13","03","08",
-	"04","02","14","11","01","05","09",
-	"13","09","01","08","04","11","07",
-	"03","10","02","06","12","14","05",
+	"f","j","l","g","m","c","h",
+	"d","b","n","k","a","e","i",
+	"m","i","a","h","d","k","g",
+	"c","j","b","f","l","n","e",
 
-	"08","01","02","03","04","05","09",
-	"10","12","04","01","05","13","06",
-	"11","11","03","02","06","14","07",
-	"07","12","13","14","09","08","10",
+	"h","a","b","c","d","e","i",
+	"j","l","d","a","e","m","f",
+	"k","k","c","b","f","n","g",
+	"g","l","m","n","i","h","j",
 
-	"14","09","12","11","10","08","13",
-	"05","01","13","07","14","03","04",
-	"03","07","11","06","12","08","02",
-	"06","02","10","01","09","04","05"
+	"n","i","l","k","j","h","m",
+	"e","a","m","g","n","c","d",
+	"c","g","k","f","l","h","b",
+	"f","b","j","a","i","d","e"
 	];
   
+  var country_name = {
+  	a:'アメリカ',
+  	b:'イギリス',
+  	c:'イタリア',
+  	d:'オーストラリア',
+  	e:'オーストリア',
+  	f:'カナダ',
+  	g:'スウェーデン',
+  	h:'スペイン',
+  	i:'チュニジア',
+  	j:'デンマーク',
+  	k:'ドイツ',
+  	l:'フランス',
+  	m:'メキシコ',
+  	n:'日本'
+  };
   
   
   var init = function() {
@@ -75,19 +91,22 @@
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, w, h);
     ctx.textAlign = "center";
-  	ctx.font = "28px 'Meiryo UI'";
+  	ctx.strokeStyle = 'black';
+  	ctx.fillStyle = 'black';
 	
 	for (var i = 0; i < num_row; i++) {
 		for (var j = 0; j < num_col; j++) {
 			var tmpx = sp*(j+1) + card_w * j;
 			var tmpy = sp*(i+1) + card_h * i;			
-			ctx.strokeStyle = 'black';
 			ctx.strokeRect(tmpx-1, tmpy-1, card_w+2, card_h+2);
 			
 			if (flag[i*num_col+j+(num_col*num_row)*ptn]) {
+				ctx.font = "18px 'Meiryo UI'";
 				ctx.drawImage(img_b[i*num_col+j+(num_col*num_row)*ptn], tmpx, tmpy, card_w, card_h);
+				ctx.fillText(country_name[img_name[i*num_col+j+(num_col*num_row)*ptn]], tmpx + card_w/2, tmpy + card_h+17);
 			} else {
-				ctx.fillStyle = 'black';
+			
+				ctx.font = "28px 'Meiryo UI'";
 				ctx.fillText(img_f[i*num_col+j+(num_col*num_row)*ptn], tmpx + card_w/2, tmpy + card_h/2+10);
 			}
 		}
